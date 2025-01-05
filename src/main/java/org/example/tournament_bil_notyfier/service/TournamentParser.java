@@ -19,12 +19,13 @@ public class TournamentParser {
   private final static String TOURNAMENT_QUERY = "div.item-row";
   private final static String CITY_TOURNAMENT_QUERY = "div";
   private final static String CLUB_NAME_QUERY = "div > span";
+  private final static String DATE_TOURNAMENT_QUERY = "time";
   private final static String FINAL_TOURNAMENT_NAME_QUERY = "a.stat-add, a.stat-ann";
   private final static Logger LOGGER = LoggerFactory.getLogger(TournamentParser.class);
 
   public String parseUpcomingTournamentsByCity(String cityName) {
     //todo refactor, this class needs only to parse, not to form response message
-    //todo add date
+    //todo remake parsed date into beautiful
     try {
       Document doc = Jsoup.connect(WEBSITE_URL).get();
       Element upcomingSection = doc.selectFirst(UPCOMING_EVENTS_QUERY);
@@ -39,13 +40,15 @@ public class TournamentParser {
 
       for (Element tournament : tournaments) {
         Element cityElement = tournament.selectFirst(CITY_TOURNAMENT_QUERY);
-        Element clubName = tournament.selectFirst(CLUB_NAME_QUERY);
         if (cityElement != null && cityElement.text().contains(cityName)) {
-          LOGGER.info("Found tournament in {}", cityName);
+          Element clubName = tournament.selectFirst(CLUB_NAME_QUERY);
+          Element date = tournament.selectFirst(DATE_TOURNAMENT_QUERY);
           Element nameElement = tournament.selectFirst(FINAL_TOURNAMENT_NAME_QUERY);
-          if (nameElement != null && clubName != null) {
+          if (nameElement != null && clubName != null && date != null) {
+            LOGGER.info("Found tournament in {}, {}",cityName, date.text());
             tournamentsNames.append("-----------------------------------").append(System.lineSeparator())
-                    .append(nameElement.text()).append(", ").append(clubName.text()).append(System.lineSeparator())
+                    .append(nameElement.text()).append(", ").append(clubName.text())
+                    .append(", ").append(date.text()).append(System.lineSeparator())
                     .append("-----------------------------------").append(System.lineSeparator());
           } else {
             tournamentsNames.append("Tournament name not found").append(System.lineSeparator());
