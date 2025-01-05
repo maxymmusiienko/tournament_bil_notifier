@@ -40,7 +40,7 @@ public class TelegramBot extends TelegramLongPollingBot {
   public void onUpdateReceived(Update update) {
     if (update.hasMessage() && update.getMessage().hasText()) {
       long chatId = update.getMessage().getChatId();
-      String text = tournamentParser.parseUpcomingTournamentsByCity("Kyiv");
+      String text = tournamentParser.parseUpcomingTournamentsByCity("Київ");
       sendMessage(chatId, text);
     }
   }
