@@ -16,7 +16,7 @@ public class MessageCreator {
   public String makeListOfTournaments(List<TournamentDto> tournaments) {
     StringBuilder tournamentsNames = new StringBuilder();
     String city = tournaments.get(0).city();
-    tournamentsNames.append("Incoming tournaments in ")
+    tournamentsNames.append("Найблищі турніри в ")
             .append(city)
             .append(":").append(System.lineSeparator());
     for (TournamentDto tournament : tournaments) {
