@@ -3,8 +3,10 @@ package org.example.tournament_bil_notyfier;
 import lombok.RequiredArgsConstructor;
 import org.example.tournament_bil_notyfier.config.BotConfig;
 import org.example.tournament_bil_notyfier.model.TournamentDto;
+import org.example.tournament_bil_notyfier.model.User;
 import org.example.tournament_bil_notyfier.service.MessageCreator;
 import org.example.tournament_bil_notyfier.service.TournamentParser;
+import org.example.tournament_bil_notyfier.service.UserService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -15,9 +17,11 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class TelegramBot extends TelegramLongPollingBot {
+  //todo implement bot functionality with chrono method
   private final BotConfig botConfig;
   private final TournamentParser tournamentParser;
   private final MessageCreator messageCreator;
+  private final UserService userService;
 
   @Override
   public String getBotUsername() {
@@ -47,6 +51,7 @@ public class TelegramBot extends TelegramLongPollingBot {
       List<TournamentDto> tournaments = tournamentParser.parseUpcomingTournamentsByCity("Київ");
       String text = messageCreator.makeListOfTournaments(tournaments);
       sendMessage(chatId, text);
+      User user = userService.saveUser(new User(chatId, true));
     }
   }
 }
